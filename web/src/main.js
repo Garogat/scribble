@@ -7,15 +7,6 @@ Vue.config.productionTip = false;
 
 api.init();
 
-const EventBus = new Vue();
-Object.defineProperties(Vue.prototype, {
-  $bus: {
-    get() {
-      return EventBus;
-    },
-  },
-});
-
 new Vue({
   el: '#app',
   store,
