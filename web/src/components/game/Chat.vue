@@ -1,13 +1,13 @@
 <template>
   <div class="chat">
     <div class="messages">
-      <div v-for="message in messages" class="message">
+      <div v-for="message in messages" :class="{ message, muted: message.muted }">
         <template v-if="message.user">
           <div class="message-user">{{ message.user }}:</div>
           <div class="message-body">{{ message.body }}</div>
         </template>
         <template v-else>
-          <div class="message-system">{{ message.body }}</div>
+          <div :class="systemMessage(message.action)">{{ message.body }}</div>
         </template>
       </div>
     </div>
@@ -16,45 +16,56 @@
 </template>
 
 <script>
-import api from '../../api.js';
+import api from '@/api';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'chat',
-  components: {
-  },
   data () {
     return {
       input: '',
-      messages: [
-        {
-          user: 'anton',
-          body: 'hello',
-        },
-        {
-          user: 'anton',
-          body: 'hello',
-        },
-        {
-          user: 'anton',
-          body: 'hello',
-        },
-      ],
+      messages: [],
     }
+  },
+  computed: {
+    ...mapGetters([
+      'username',
+    ])
   },
   methods: {
     send() {
       api.send('lobby:chat', this.input);
       this.input = '';
     },
-    chatListener(msg) {
-      this.messages.push(msg);
-    }
+    systemMessage(action) {
+      let classes = {
+        'message-system': true,
+      };
+      classes[action] = true;
+      return classes;
+    },
   },
   beforeMount() {
-    api.on('lobby:chat', this.chatListener);
-  },
-  beforeDestroy() {
-    api.removeListener('lobby:chat', this.chatListener);
+    api.on('lobby:chat', msg => {
+      this.messages.push(msg);
+    });
+
+    api.on('lobby:joined', ({ user }) => {
+      if (user.name === this.username) {
+        return;
+      }
+      this.messages.push({
+        action: 'join',
+        body: user.name + ' joined.',
+      });
+    });
+
+    api.on('lobby:left', ({ user }) => {
+      this.messages.push({
+        action: 'left',
+        body: user.name + ' left!',
+      });
+    });
   },
 }
 </script>
@@ -74,6 +85,10 @@ export default {
   display: flex;
 }
 
+.chat .message:nth-child(2n) {
+  background: #ccc;
+}
+
 .chat .message .message-user {
   font-weight: bold;
 }
@@ -82,24 +97,27 @@ export default {
   margin-left: .5rem;
 }
 
+.chat .message .message-system {
+  color: yellow;
+}
 .chat .message .message-system.join {
   color: blue;
 }
-
 .chat .message .message-system.left {
   color: red;
 }
-
-.chat .message .message-system.close {
+.chat .message .message-system.info {
   color: orange;
 }
-
-.chat .message .message-system.guess {
+.chat .message .message-system.guessed {
   color: green;
 }
 
-.chat .message:nth-child(2n) {
-  background: #ccc;
+.chat .message.muted .message-user {
+  color: orange;
+}
+.chat .message.muted .message-body {
+  color: orange;
 }
 
 .chat .input {

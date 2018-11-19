@@ -3,8 +3,6 @@
 </template>
 
 <script>
-import whiteboard from './Whiteboard.vue';
-
 export default {
   name: 'whiteboard',
   data () {
@@ -64,7 +62,6 @@ export default {
       }
     },
     handleMouseDown(event) {
-      console.log('down');
       this.mouse.down = true;
       this.mouse.current = {
         x: event.pageX,

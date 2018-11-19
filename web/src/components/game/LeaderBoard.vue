@@ -3,33 +3,34 @@
     <div class="users">
       <div v-for="user in users" class="user">
         <div class="user-name">{{ user.name }}</div>
-        <div class="user-body">{{ user.score }}</div>
-        <div v-if="user.drawing" class="user-drawing">pen</div>
-        <div v-else class="user-guessing">guessing</div>
+        <div class="user-score">{{ user.score }}</div>
+        <div class="user-mode">{{ user.mode }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import api from '@/api';
+
 export default {
   name: 'leaderboard',
-  components: {
-  },
-  data () {
+  data() {
     return {
-      users: [
-        {
-          name: 'anton',
-          score: 1000,
-          drawing: true,
-        }
-      ],
-    }
-  },
-  methods: {
+      users: [],
+    };
   },
   beforeMount() {
+    api.on('lobby:joined', ({ user }) => {
+      // TODO: if user not already added
+      if (this.user) {
+        this.users.push(user);
+      }
+    });
+
+    api.on('lobby:left', ({ user }) => {
+      // TODO: remove user
+    });
   },
 }
 </script>
@@ -46,10 +47,15 @@ export default {
 
 .leaderboard .users {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .leaderboard .user {
   display: flex;
+  width: 100%;
+  padding: .5rem;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
 }
 
 .leaderboard .user .user-name {

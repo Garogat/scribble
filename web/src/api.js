@@ -1,6 +1,6 @@
 const EventEmitter = require('wolfy87-eventemitter');
 
-const url = 'ws://localhost:3000';
+const url = 'ws://localhost:3002';
 
 let ws;
 let emitter;

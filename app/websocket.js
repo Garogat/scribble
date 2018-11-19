@@ -75,6 +75,7 @@ function init(server) {
     };
 
     ws.on('close', () => {
+      Packets.emit(ws, 'close');
       console.log('[Websocket] Client disconnected');
     });
   });

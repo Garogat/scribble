@@ -2,8 +2,8 @@
   <div id="app">
     <h1>You guess or you know?</h1>
     <template v-if="state==='open'">
-      <template v-if="lobby">
-        <Game></Game>
+      <template v-if="lobbyId">
+        <Lobby></Lobby>
       </template>
       <template v-else>
         <Home></Home>
@@ -16,40 +16,31 @@
 </template>
 
 <script>
-import EventBus from '../event-bus';
-import api from '../api.js';
-
-import Game from './Game.vue';
-import Home from './Home.vue';
+import api from '@/api';
+import { mapGetters } from 'vuex';
+import Home from '@/components/Home';
+import Lobby from '@/components/Lobby';
 
 export default {
   name: 'app',
   components: {
-    Game,
     Home,
+    Lobby,
   },
   data () {
     return {
       state: null,
-      lobby: false,
     }
   },
-  methods: {
-    stateListener({ state }) {
-      if (state === 'open') {
-        this.lobby = false;
-      }
-      this.state = state;
-    },
+  computed: {
+    ...mapGetters([
+      'lobbyId',
+   ]),
   },
   beforeMount() {
-    api.on('state', this.stateListener);
-    EventBus.$on('lobby:joined', (payLoad) => {
-      this.lobby = payLoad;
+    api.on('state', ({ state }) => {
+      this.state = state;
     });
-  },
-  beforeDestroy() {
-    api.removeListener('state', this.stateListener);
   },
 }
 </script>

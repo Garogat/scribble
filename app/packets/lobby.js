@@ -5,7 +5,6 @@ module.exports = ({ on }) => {
     client.sendLobby('lobby:joined', {
       user: {
         name: payload.name,
-        score: 0,
       },
     });
   });
@@ -15,11 +14,17 @@ module.exports = ({ on }) => {
       client.sendLobby('lobby:chat', {
         user: client.user,
         body: payload,
-      });  
+      });
     }
   });
 
-  on('appointment:delete', (client, payload) => {
-    client.sendPacket('dump', payload);
+  on('close', (client) => {
+    if (client.lobby) {
+      client.sendLobby('lobby:left', {
+        user: {
+          name: client.user
+        },
+      });
+    }
   });
 };

@@ -23,8 +23,9 @@
 </template>
 
 <script>
-import api from '../api.js';
-import EventBus from '../event-bus.js';
+import api from '@/api';
+import Store from '@/store';
+import { LOBBY_JOIN } from '@/store/actions.type';
 
 export default {
   name: 'home',
@@ -39,26 +40,18 @@ export default {
   methods: {
     join() {
       this.error = null;
-      if (this.name) {
-        api.send('lobby:join', {
-          lobby: 'abc',
-          name: this.name,
-        });
-      } else {
+      if (!this.name) {
         this.error = 'Everyone need a name!';
+        return;
       }
-    },
-    lobbyListener({lobby, user}) {
-      if (user.name === this.name) {
-        EventBus.$emit('lobby:joined', true);
-      }
+
+      Store.dispatch(LOBBY_JOIN, {
+          lobbyId: 'abc',
+          username: this.name,
+        });
     },
   },
   beforeMount() {
-    api.on('lobby:joined', this.lobbyListener);
-  },
-  beforeDestroy() {
-    api.removeListener('lobby:joined', this.lobbyListener);
   },
 }
 </script>
