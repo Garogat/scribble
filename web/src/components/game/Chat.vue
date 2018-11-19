@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import api from '../../api.js';
+
 export default {
   name: 'chat',
   components: {
@@ -41,15 +43,18 @@ export default {
   },
   methods: {
     send() {
-      let msg = {
-        user: 'anton',
-        body: this.input,
-      };
-      this.messages.push(msg);
+      api.send('lobby:chat', this.input);
       this.input = '';
     },
+    chatListener(msg) {
+      this.messages.push(msg);
+    }
   },
   beforeMount() {
+    api.on('lobby:chat', this.chatListener);
+  },
+  beforeDestroy() {
+    api.removeListener('lobby:chat', this.chatListener);
   },
 }
 </script>

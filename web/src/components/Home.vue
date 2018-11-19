@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="join">
-      <input type="text" v-model="name" class="join-name" placeholder="Choose your name ...">
+      <input type="text" v-model="name" @keyup.enter="join" class="join-name" placeholder="Choose your name ...">
       <div v-if="error" class="join-error">{{ error }}</div>
       <button @click="join" class="join-play">Play!</button>
     </div>
@@ -24,6 +24,7 @@
 
 <script>
 import api from '../api.js';
+import EventBus from '../event-bus.js';
 
 export default {
   name: 'home',
@@ -49,7 +50,7 @@ export default {
     },
     lobbyListener({lobby, user}) {
       if (user.name === this.name) {
-        // TODO: emit local lobby join
+        EventBus.$emit('lobby:joined', true);
       }
     },
   },

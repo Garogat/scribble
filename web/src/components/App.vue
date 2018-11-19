@@ -16,10 +16,11 @@
 </template>
 
 <script>
-import Game from './components/Game.vue';
-import Home from './components/Home.vue';
+import EventBus from '../event-bus';
+import api from '../api.js';
 
-import api from './api.js';
+import Game from './Game.vue';
+import Home from './Home.vue';
 
 export default {
   name: 'app',
@@ -30,7 +31,7 @@ export default {
   data () {
     return {
       state: null,
-      lobby: null,
+      lobby: false,
     }
   },
   methods: {
@@ -40,6 +41,9 @@ export default {
   },
   beforeMount() {
     api.on('state', this.stateListener);
+    EventBus.$on('lobby:joined', (payLoad) => {
+      this.lobby = payLoad;
+    });
   },
   beforeDestroy() {
     api.removeListener('state', this.stateListener);

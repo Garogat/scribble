@@ -4,6 +4,7 @@ const Packets = require('./packets');
 let wss;
 
 function sendLobby(lobby, type, payload) {
+  console.log(type, payload);
   wss.clients.forEach((client) => {
     if (client.readyState === ws.OPEN && client.lobby === lobby) {
       client.sendPacket(type, payload);
@@ -66,6 +67,7 @@ function init(server) {
     ws.sendPacket = (...args) => {
       sendPacket(ws, ...args);
     };
+
     ws.sendLobby = (...args) => {
       if (ws.lobby) {
         sendLobby(ws.lobby, ...args);

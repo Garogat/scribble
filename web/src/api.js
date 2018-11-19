@@ -31,6 +31,7 @@ function connect() {
       const { type, payload } = JSON.parse(data);
       emit(type, payload);
     } catch (ignore) {
+      console.error(ignore);
       emit('undefined', data);
     }
   };
