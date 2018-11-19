@@ -11,10 +11,12 @@ module.exports = ({ on }) => {
   });
 
   on('lobby:chat', (client, payload) => {
-    client.sendLobby('lobby:chat', {
-      user: client.user,
-      body: payload,
-    });
+    if (client.lobby) {
+      client.sendLobby('lobby:chat', {
+        user: client.user,
+        body: payload,
+      });  
+    }
   });
 
   on('appointment:delete', (client, payload) => {

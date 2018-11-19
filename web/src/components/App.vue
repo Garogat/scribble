@@ -36,6 +36,9 @@ export default {
   },
   methods: {
     stateListener({ state }) {
+      if (state === 'open') {
+        this.lobby = false;
+      }
       this.state = state;
     },
   },
