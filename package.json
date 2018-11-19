@@ -1,0 +1,20 @@
+{
+  "name": "scribble",
+  "version": "1.0.0",
+  "description": "A server for a simple multiplayer game, where you guess drawings.",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node app/index.js",
+    "dev": "NODE_ENV=development nodemon --watch index.js --watch app/ --watch config/ app/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anton Bracke <anton@ju60.de>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "ws": "^6.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}
