@@ -34,8 +34,10 @@ export default {
   },
   methods: {
     send() {
-      api.send('chat', this.input);
-      this.input = '';
+      if (this.input !== '') {
+        api.send('chat', this.input);
+        this.input = '';
+      }
     },
     systemMessage(action) {
       let classes = {
