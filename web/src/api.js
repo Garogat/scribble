@@ -26,7 +26,7 @@ function connect() {
   };
 
   ws.onmessage = ({ data }) => {
-    console.log('[WebSocket] <', data);
+    // console.log('[WebSocket] <', data);
     try {
       const { type, payload } = JSON.parse(data);
       emit(type, payload);
@@ -73,7 +73,7 @@ function send(arg1, arg2) {
       console.error(`[Websocket] error: ${error}`);
     }
 
-    console.log('[Websocket] >', json);
+    // console.log('[Websocket] >', json);
     ws.send(json);
   }
 }

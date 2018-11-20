@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     send() {
-      api.send('lobby:chat', this.input);
+      api.send('chat', this.input);
       this.input = '';
     },
     systemMessage(action) {
@@ -46,8 +46,9 @@ export default {
     },
   },
   beforeMount() {
-    api.on('lobby:chat', msg => {
+    api.on('chat', msg => {
       this.messages.push(msg);
+      // TODO: scroll to bottom
     });
 
     api.on('lobby:joined', ({ user }) => {
@@ -78,6 +79,17 @@ export default {
   margin-left: 2rem;
   background: #fff;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.chat .messages-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+}
+
+.chat .messages {
+  overflow-y: auto;
 }
 
 .chat .message {

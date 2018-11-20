@@ -4,7 +4,6 @@ const Packets = require('./packets');
 let wss;
 
 function sendLobby(lobby, type, payload) {
-  console.log(type, payload);
   wss.clients.forEach((client) => {
     if (client.readyState === ws.OPEN && client.lobby === lobby) {
       client.sendPacket(type, payload);
@@ -41,7 +40,7 @@ function sendPacket(client, arg1, arg2) {
       console.err(`[Websocket] error: ${error}`);
     }
 
-    console.log(`[Websocket] < ${json}`);
+    // console.log(`[Websocket] < ${json}`);
     client.send(json);
   }
 }
@@ -57,7 +56,7 @@ function init(server) {
       try {
         const { type, payload } = JSON.parse(msg);
         Packets.emit(ws, type, payload);
-        console.log(`[Websocket] > ${type}`);
+        // console.log(`[Websocket] > ${type}`);
       } catch (ignore) {
         Packets.emit('undefined', msg);
         console.error(ignore);

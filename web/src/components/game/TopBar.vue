@@ -12,19 +12,28 @@
 </template>
 
 <script>
+import api from '@/api';
+
 export default {
   name: 'topbar',
   components: {
   },
   data () {
     return {
-      timeLeft: 180,
-      word: ['', '', '', 'b', ''],
+      timeLeft: 0,
+      word: [],
     }
   },
   methods: {
   },
   beforeMount() {
+    api.on('lobby:word', ({ word }) => {
+      this.word = word;
+    });
+
+    api.on('lobby:timeleft', ({ timeLeft }) => {
+      this.timeLeft = timeLeft;
+    });
   },
 }
 </script>

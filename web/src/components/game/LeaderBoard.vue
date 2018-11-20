@@ -23,7 +23,7 @@ export default {
   beforeMount() {
     api.on('lobby:joined', ({ user }) => {
       // TODO: if user not already added
-      if (this.user) {
+      if (this.users) {
         this.users.push(user);
       }
     });
